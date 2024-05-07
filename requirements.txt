@@ -6,3 +6,5 @@ imageio
 gpcam
 dask
 imate
+dask-jobqueue
+distributed
