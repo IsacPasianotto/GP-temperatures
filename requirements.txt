@@ -1,0 +1,8 @@
+pandas
+numpy
+jupyter
+matplotlib
+imageio
+gpcam
+dask
+imate
