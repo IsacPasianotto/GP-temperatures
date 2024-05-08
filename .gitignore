@@ -172,3 +172,5 @@ data/data.csv
 data/data_1960.csv
 data/evolution.gif
 
+# Slurm outs
+*.out
