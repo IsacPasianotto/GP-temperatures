@@ -26,9 +26,9 @@ def main():
     DATA_FILE_NAME = 'data_1960.csv'
     OUT_DIR = "out/"
     # MAT_SIZE = 10000, BATCH_SIZE = 100, 2 epyc --> 46 min train, ~ 2 min init 
-    MAT_SIZE = 30000
-    BATCH_SIZE = 300
-    MAX_ITER_TRAIN = 200
+    MAT_SIZE = 45000
+    BATCH_SIZE = 750
+    MAX_ITER_TRAIN = 100
     ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
 
     ### Read the data ###
@@ -48,10 +48,10 @@ def main():
                            memory="480GB",
                            processes=128,
                            job_cpu=128,
-                           n_workers=0,
+                           n_workers=1,
                            account="dssc",
                            queue="EPYC",
-                           walltime="02:00:00",
+                           walltime="36:00:00",
                            job_script_prologue=['#SBATCH --output=' + OUT_DIR + '/slurm-%j.out',
                                 '#SBATCH --job-name="GP-slave"',
                                 'echo "-----------------------------------------------"',
@@ -61,13 +61,13 @@ def main():
                                 'source ' + ENV_TO_SOURCE]
                            )
 
+    cluster.scale(384) # Automatically will take all it can take, < 4 if 4 is not available
     # cluster.scale(256) # Automatically will take all it can take, < 4 if 4 is not available
-    cluster.scale(jobs=3) # Automatically will take all it can take, < 4 if 4 is not available
     client = Client(cluster)
     # wait for workers to be ready
-    time.sleep(20)
-    print(client, flush=True)
+    time.sleep(35)
     print("Client is up and running", flush=True)
+    print(client, flush=True)
 
     ### Define the model ###
 
@@ -92,6 +92,7 @@ def main():
 
     t_train_start = time.time()
     gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN, method='global')
+    # gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN, method='mcmc')
     t_train_end = time.time()
 
     print("Training time: ", t_train_end - t_train_start)

@@ -4,7 +4,7 @@ import numpy as np
 # CONSTANTS
 INPUT_SPACE_DIM = 3  # dimension of the input space
 N1 = 1
-N2 =1
+N2 = 1
 
 def l2_norm(x1, x2):
     '''
