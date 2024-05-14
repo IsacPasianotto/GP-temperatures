@@ -147,10 +147,11 @@ def custom_kernel(x1, x2, hyperparameters, obj):
 
 def custom_kernel_matrix(x_data, x_data1, hyperparameters, obj):
     N = x_data.shape[0]
-    K = np.empty([N, N])
+    NN = x_data1.shape[0]
+    K = np.empty([N, NN])
     # The matrix is symmetric, so we can compute only the upper triangular part
     for i in range(N):
-        for j in range(i, N):
+        for j in range(i, NN):
             K[i, j] = custom_kernel(x_data[i], x_data1[j], hyperparameters, obj)
             K[j, i] = K[i, j]
     return K
@@ -179,10 +180,11 @@ def custom_kernel_one_shot(x_data, x_data1, hyperparameters, obj):
     """
 
     N = x_data.shape[0]
-    K = np.empty([N, N])
+    NN = x_data1.shape[0]
+    K = np.empty([N, NN])
     # The matrix is symmetric, so we can compute only the upper triangular part
     for i in range(N):
-        for j in range(i, N):
+        for j in range(i, NN):
 
             ## extract the hyperparameters and constants ##
             x1 = x_data[i]
@@ -243,4 +245,3 @@ def custom_kernel_one_shot(x_data, x_data1, hyperparameters, obj):
     # Finally, return the kernel matrix
 
     return K
-                                                                                                                                                                                                 
