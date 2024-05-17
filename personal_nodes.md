@@ -113,20 +113,29 @@ a sto punto teniamo la size di 25 k che è fattibile in tempi ragionevoli, ora h
     - init time: 852 
     - train time : 44191.26421666145
 
-- slurm-....
+- slurm-422452
     - 1 master, 3 slave
     - 25k points
-    - n1: 4, n2: 1
+    - n1: 4, n2: 2
     - batchsize: 1000
     - iter train: 100
-    - init time: 
-    - train time:
+    - init time: 548.55 
+    - train time: 63374.386
 
-- slurm-........
+- slurm-418806
     - 1 master, 3 slave
     - 25k points
     - n1: 3, n2: 3
     - batchsize: 1000
     - iter train: 100
-    - init time:  
-    - train time:
+    - init time: 1048.93  
+    - train time:70193.17
+
+- slurm-422876
+    - 1 master, 3 slave
+    - 25k points
+    - n1: 4, n2: 1
+    - batchsize: 1000
+    - iter train: 100
+    - init time: 194.45  
+    - train time 56704.491956949234
