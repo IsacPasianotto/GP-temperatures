@@ -14,6 +14,7 @@ INPUT_SPACE_DIM = 3
 N1 = 1
 N2 = 1
 HPS_FILE = "./out/one_one.npy"
+RESULT_FILE = "./out/inf_one_one.txt"
 
 DT = np.float64
 DATA_DIR = "./data/"
@@ -24,6 +25,7 @@ MAX_ITER_TRAIN = 10
 TEST_SIZE = 100000  # due to a "bug" it has to be <= MAT_SIZE
 OUT_DIR = './out'
 ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
+
 
 def main():
     ## Read the data ###
@@ -84,15 +86,18 @@ def main():
             info=False)
     t_init_end = time.time()
 
-    print("===========================================", flush=True)
-    print("N1: ", N1, flush=True)
-    print("N2: ", N2, flush=True)
-    print("...........................", flush=True)
-    print("Matrix size: ", MAT_SIZE, flush=True)
-    print("Batch size: ", BATCH_SIZE, flush=True)
-    print("===========================================", flush=True)
-    print("Initialization time: ", t_init_end - t_init_start, flush=True)
-    print("===========================================", flush=True)
+    # print the info to the file:
+    with open(RESULT_FILE, 'w') as f:
+        print("===========================================", file=f)
+        print("N1: ", N1, file=f)
+        print("N2: ", N2, file=f)
+        print("...........................", file=f)
+        print("Matrix size: ", MAT_SIZE, file=f)
+        print("Batch size: ", BATCH_SIZE, file=f)
+        print("===========================================", file=f)
+        print("Initialization time: ", t_init_end - t_init_start, file=f)
+        print("===========================================", file=f)
+
 
     #### Perform the prediction ###
     t_infer_start = time.time()
@@ -101,10 +106,11 @@ def main():
 
     # evaluate the model
     mse = metrics.mean_squared_error(y_test, y_pred)
-    print("Inference time: ", t_infer_end - t_infer_start, flush=True)
-    print("MSE: ", mse, flush=True)
-    print("===========================================", flush=True)
 
+    with open(RESULT_FILE, 'a') as f:
+        print("Inference time: ", t_infer_end - t_infer_start, file=f)
+        print("MSE: ", mse, file=f)
+        print("===========================================", file=f)
 
 if __name__ == '__main__':
     main()
