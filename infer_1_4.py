@@ -19,10 +19,10 @@ RESULT_FILE = "./out/inf_one_four.txt"
 DT = np.float64
 DATA_DIR = "./data/"
 DATA_FILE_NAME = 'data_1960.csv'
-MAT_SIZE = 550000
+MAT_SIZE = 200000
 BATCH_SIZE = 1000
 MAX_ITER_TRAIN = 10
-TEST_SIZE = 100000  # due to a "bug" it has to be <= MAT_SIZE
+TEST_SIZE = 15000  # due to a "bug" it has to be <= MAT_SIZE
 OUT_DIR = './out'
 ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
 
@@ -52,7 +52,7 @@ def main():
                            memory="480GB",
                            processes=128,
                            job_cpu=128,
-                           n_workers=1,
+                           n_workers=0,
                            account="dssc",
                            queue="EPYC",
                            walltime="36:00:00",
@@ -94,6 +94,7 @@ def main():
         print("...........................", file=f)
         print("Matrix size: ", MAT_SIZE, file=f)
         print("Batch size: ", BATCH_SIZE, file=f)
+        print("Test size: ", TEST_SIZE, file=f)
         print("===========================================", file=f)
         print("Initialization time: ", t_init_end - t_init_start, file=f)
         print("===========================================", file=f)
@@ -104,11 +105,13 @@ def main():
     y_pred = gp.posterior_mean(x_test)["f(x)"]
     t_infer_end = time.time()
 
+    with open(RESULT_FILE, 'a') as f:
+        print("Inference time: ", t_infer_end - t_infer_start, file=f)
+
     # evaluate the model
     mse = metrics.mean_squared_error(y_test, y_pred)
 
     with open(RESULT_FILE, 'a') as f:
-        print("Inference time: ", t_infer_end - t_infer_start, file=f)
         print("MSE: ", mse, file=f)
         print("===========================================", file=f)
 
