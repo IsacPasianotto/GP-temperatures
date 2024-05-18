@@ -1,0 +1,57 @@
+* Some notes made during various runs of the code
+
+** Scaling with the number of node.
+
+The code is written in a way it spawn a master process which is going to spawn others.
+For how the code work, the most convenient way to run it is to dedicate an entire node to the master process and let the workers to have an entire node too.
+
+
+|            | 2 nodes      | 3 nodes    |
+|------------+--------------+------------|
+| out file   | slurm-417955 | slurm-7971 |
+| train_size | 1000 points  | idem       |
+| batch_size | 100  point   | idem       |
+| init_time  | 9.33         | 6.32       |
+| train_time | 63.666       | 23.96      |
+
+
+
+** The ~batch size~ matters a lot!
+
+The batch size is one of the most impacting parameter in the time of training. Increasing the batch could lead to a faster training, but exagerating could lead to a slower training.
+On the node (Epyc node on orfeo cluster) I have run the code a good trade of is to have a batch size of 1000 points.
+
+
+** *Fitting the model*
+
+The two "hyper-hyperparameter" $N_1$ and $N_2$ are incredibly effecting in the number of total hyperparameter, and therefore in the total time needed for fitting the model.
+
+For this fitting section, I've kept constant:
+  * The total number of node:                   4 (1 master, 3 workers)
+  * The number of points in the training set:   25,000
+  * The batch size:                             1000
+
+
+*Slurm outputs** (keeped if needed for some debug)
+
+| n1\n2 |      1 |      2 |      3 |      4 |
+|     1 | 418026 |        |        | 418804 |
+|     2 |        | 418607 |        | 418611 |
+|     3 |        |        | 418806 |        |
+|     4 | 422876 | 422452 |        | 418685 |
+
+
+*Initialization time*
+| n1\n2 |      1 |      2 |       3 |      4 |
+|     1 | 105.34 |        |         | 852.95 |
+|     2 |        | 831.74 |         | 425.02 |
+|     3 |        |        | 1048.93 |        |
+|     4 | 194.45 | 548.55 |         | 914.06 |
+
+*Fitting time*
+| n1\n2 |        1 |        2 |        3 |        4 |
+|     1 |  5159.07 |          |          | 44191.26 |
+|     2 |          | 22632.68 |          | 15993.59 |
+|     3 |          |          | 70193.17 |          |
+|     4 | 56704.49 | 63374.39 |          | 66663.95 |
+
