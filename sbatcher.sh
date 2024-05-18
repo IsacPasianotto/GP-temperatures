@@ -37,5 +37,5 @@ export DASK_WORKER_PROCESSES=128
 
 
 # execute the code
-python3 -u main.py 
+python3 -u infer.py 
 

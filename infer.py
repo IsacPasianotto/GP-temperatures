@@ -9,7 +9,6 @@ import src.kernel as kernels
 import src.hyperparameters as hps
 import sklearn.metrics as metrics
 
-
 ### Constants ###
 INPUT_SPACE_DIM = 3
 N1 = 1
@@ -17,15 +16,16 @@ N2 = 1
 HPS_FILE = "./out/one_one.npy"
 
 DT = np.float64
-DATA_DIR = "../data/"
+DATA_DIR = "./data/"
 DATA_FILE_NAME = 'data_1960.csv'
-MAT_SIZE = 1500
-BATCH_SIZE = 100
-MAX_ITER_TRAIN = 100
-TEST_SIZE = 1000  # due to a "bug" it has to be <= MAT_SIZE
+MAT_SIZE = 550000
+BATCH_SIZE = 1000
+MAX_ITER_TRAIN = 10
+TEST_SIZE = 750  # due to a "bug" it has to be <= MAT_SIZE
+OUT_DIR = './out'
 ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
 
-def(main):
+def main():
     ## Read the data ###
 
     data = pd.read_csv(DATA_DIR + DATA_FILE_NAME)
@@ -94,7 +94,15 @@ def(main):
     print("Initialization time: ", t_init_end - t_init_start, flush=True)
     print("===========================================", flush=True)
 
-    #### Perform the prediction ####
+    ## Using pre-trained parameters, the training should be very very fast: 
+    hps_bounds = hps.build_bounds(N1, N2)
+    t_train_start = time.time()
+    gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN) 
+    t_train_end = time.time()    
+    print("Training time: ", t_train_end - t_train_start, flush=True)
+    print("============================================", flush=True)
+
+    #### Perform the prediction ###
     t_infer_start = time.time()
     y_pred = gp.posterior_mean(x_test)["f(x)"]
     t_infer_end = time.time()
