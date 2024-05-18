@@ -21,7 +21,7 @@ DATA_FILE_NAME = 'data_1960.csv'
 MAT_SIZE = 550000
 BATCH_SIZE = 1000
 MAX_ITER_TRAIN = 10
-TEST_SIZE = 750  # due to a "bug" it has to be <= MAT_SIZE
+TEST_SIZE = 100000  # due to a "bug" it has to be <= MAT_SIZE
 OUT_DIR = './out'
 ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
 
@@ -93,14 +93,6 @@ def main():
     print("===========================================", flush=True)
     print("Initialization time: ", t_init_end - t_init_start, flush=True)
     print("===========================================", flush=True)
-
-    ## Using pre-trained parameters, the training should be very very fast: 
-    hps_bounds = hps.build_bounds(N1, N2)
-    t_train_start = time.time()
-    gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN) 
-    t_train_end = time.time()    
-    print("Training time: ", t_train_end - t_train_start, flush=True)
-    print("============================================", flush=True)
 
     #### Perform the prediction ###
     t_infer_start = time.time()
