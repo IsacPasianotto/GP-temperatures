@@ -19,10 +19,10 @@ RESULT_FILE = "./out/inf_two_four.txt"
 DT = np.float64
 DATA_DIR = "./data/"
 DATA_FILE_NAME = 'data_1960.csv'
-MAT_SIZE = 200000
-BATCH_SIZE = 1000
+MAT_SIZE = 75000
+BATCH_SIZE = 2500
 MAX_ITER_TRAIN = 10
-TEST_SIZE = 15000  # due to a "bug" it has to be <= MAT_SIZE
+TEST_SIZE = 1000  # due to a "bug" it has to be <= MAT_SIZE
 OUT_DIR = './out'
 ENV_TO_SOURCE = 'source /u/dssc/ipasia00/test_dask/dask/bin/activate'
 
