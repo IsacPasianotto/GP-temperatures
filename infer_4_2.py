@@ -19,8 +19,8 @@ RESULT_FILE = "./out/inf_four_two.txt"
 DT = np.float64
 DATA_DIR = "./data/"
 DATA_FILE_NAME = 'data_1960.csv'
-MAT_SIZE = 75000
-BATCH_SIZE = 2500
+MAT_SIZE = 50000
+BATCH_SIZE = 1000
 MAX_ITER_TRAIN = 10
 TEST_SIZE = 1000  # due to a "bug" it has to be <= MAT_SIZE
 OUT_DIR = './out'
@@ -65,7 +65,8 @@ def main():
                                                 'source ' + ENV_TO_SOURCE]
                            )
 
-    cluster.scale(384) # Automatically will take all it can take, < 4 if 4 is not available
+    # cluster.scale(384) # Automatically will take all it can take, < 4 if 4 is not available
+    cluster.scale(256) # Automatically will take all it can take, < 4 if 4 is not available
     # wait for workers to be ready
     time.sleep(35)
 
@@ -108,6 +109,9 @@ def main():
     with open(RESULT_FILE, 'a') as f:
         print("Inference time: ", t_infer_end - t_infer_start, file=f)
 
+    # to be shure save the model:
+    np.save("y_pred_4_2.npy", y_pred)
+    np.save("y_test_4_2.npy", y_test)
     # evaluate the model
     mse = metrics.mean_squared_error(y_test, y_pred)
 
