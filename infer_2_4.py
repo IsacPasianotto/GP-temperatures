@@ -14,7 +14,13 @@ INPUT_SPACE_DIM = 3
 N1 = 2
 N2 = 4
 HPS_FILE = "./out/two_four.npy"
-RESULT_FILE = "./out/inf_two_four.txt"
+
+SUFFIX = "_2_4"
+RESULT_FILE = "./out/infer" + SUFFIX + ".txt"
+PRED_FILE = "./out/pred" + SUFFIX + ".npy"
+ACT_VAL_FILE = "./out/act_val" + SUFFIX + ".npy"
+ERRORS_FILE = "./out/errors" + SUFFIX + ".npy"
+
 
 DT = np.float64
 DATA_DIR = "./data/"
@@ -56,6 +62,7 @@ def main():
                            account="dssc",
                            queue="EPYC",
                            walltime="36:00:00",
+                           interface="ibp161s0",  # use 'ip link show' to find the one which use infiniband
                            job_script_prologue=['#SBATCH --output=' + OUT_DIR + '/slurm-%j.out',
                                                 '#SBATCH --job-name="GP-slave"',
                                                 'echo "-----------------------------------------------"',
@@ -111,6 +118,14 @@ def main():
 
     # evaluate the model
     mse = metrics.mean_squared_error(y_test, y_pred)
+
+
+    # Save the prediction and actual values for further analysis
+    np.save(PRED_FILE, y_pred)
+    np.save(ACT_VAL_FILE, y_test)
+    # Save the errors
+    errors = y_pred - y_test
+    np.save(ERRORS_FILE, errors)
 
     with open(RESULT_FILE, 'a') as f:
         print("MSE: ", mse, file=f)

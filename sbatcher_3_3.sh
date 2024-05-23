@@ -8,8 +8,7 @@
 #SBATCH --cpus-per-task=128    # 24 thin, 128 epyc	
 #SBATCH --mem=450G
 #SBATCH --time=36:00:00
-# #SBATCH --nodelist=epyc001
-#SBATCH --nodelist=epyc003
+#SBATCH --nodelist=epyc001
 
 # REMARK: 
 #    The master process does not need so much resources. 

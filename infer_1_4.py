@@ -14,7 +14,12 @@ INPUT_SPACE_DIM = 3
 N1 = 1
 N2 = 4
 HPS_FILE = "./out/one_four.npy"
-RESULT_FILE = "./out/inf_one_four.txt"
+
+SUFFIX = "_1_4"
+RESULT_FILE = "./out/infer" + SUFFIX + ".txt"
+PRED_FILE = "./out/pred" + SUFFIX + ".npy"
+ACT_VAL_FILE = "./out/act_val" + SUFFIX + ".npy"
+ERRORS_FILE = "./out/errors" + SUFFIX + ".npy"
 
 DT = np.float64
 DATA_DIR = "./data/"
@@ -56,6 +61,7 @@ def main():
                            account="dssc",
                            queue="EPYC",
                            walltime="36:00:00",
+                           interface="ibp161s0",  # use 'ip link show' to find the one which use infiniband
                            job_script_prologue=['#SBATCH --output=' + OUT_DIR + '/slurm-%j.out',
                                                 '#SBATCH --job-name="GP-slave"',
                                                 'echo "-----------------------------------------------"',
@@ -105,6 +111,15 @@ def main():
     t_infer_start = time.time()
     y_pred = gp.posterior_mean(x_test)["f(x)"]
     t_infer_end = time.time()
+
+
+    # Save the prediction and actual values for further analysis
+    np.save(PRED_FILE, y_pred)
+    np.save(ACT_VAL_FILE, y_test)
+    # Save the errors
+    errors = y_pred - y_test
+    np.save(ERRORS_FILE, errors)
+
 
     with open(RESULT_FILE, 'a') as f:
         print("Inference time: ", t_infer_end - t_infer_start, file=f)
