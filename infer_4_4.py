@@ -84,6 +84,8 @@ def main():
     ### Define the model ###
 
     init_hps = np.load(HPS_FILE)
+    hps_bounds = hps.build_bounds(N1, N2)
+
 
     t_init_start = time.time()
     gp = GP(INPUT_SPACE_DIM, x_train, y_train,
@@ -107,6 +109,14 @@ def main():
         print("Initialization time: ", t_init_end - t_init_start, file=f)
         print("===========================================", file=f)
 
+    # Make a Train
+    
+    t_train_start = time.time()
+    gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN, method='global')
+    # gp.train(hyperparameter_bounds=hps_bounds, max_iter=MAX_ITER_TRAIN, method='mcmc')
+    t_train_end = time.time()
+    print("Training time: ", t_train_end - t_train_start)
+
 
     #### Perform the prediction ###
     t_infer_start = time.time()
@@ -117,7 +127,7 @@ def main():
         print("Inference time: ", t_infer_end - t_infer_start, file=f)
     # backup the results
     np.save("y_pred_4_4.npy", y_pred)
-    np.save("y_test_4_4.npy", y_test)s
+    np.save("y_test_4_4.npy", y_test)
     # evaluate the model
     mse = metrics.mean_squared_error(y_test, y_pred)
 
