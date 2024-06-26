@@ -1,3 +1,9 @@
+* NOTES:
+
+To change the values of ~n1~ and ~n2~ of the kernel formulation, remember to change the variables the variables ~N1~ and ~N2~ in both: ~train.py~/~infer.py~ and in ~src/kernel.py~.
+
+
+
 * Some notes made during various runs of the code
 
 ** Scaling with the number of node.
